@@ -5,7 +5,6 @@ import open3d as o3d
 from sklearn.decomposition import PCA
 import glob
 import os
-# from Image import DepthImage
 
 def from_pcd(pcd_filename, shape, default_filler=0, index=None):
         img = np.zeros(shape)
