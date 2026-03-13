@@ -53,11 +53,11 @@ def show_anns(anns):
 image_paths = ["sam_1.jpeg", "sam_2.jpg", "sam_3.jpeg", "sam_4.jpg", "sam_5.jpg", "sam_6.jpg", "sam_7.jpg", "sam_8.jpg", "sam_9.jpg", "sam_10.jpg", "sam_11.jpg", "sam_12.jpg"]
 
 for path in image_paths:
-    if not os.path.exists(path):
+    if not os.path.exists('sam_images/' + path):
         print(f"Skipping {path}: File not found.")
         continue
 
-    image = cv2.imread(path)
+    image = cv2.imread('sam_images/' + path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     h, w = image.shape[:2]
