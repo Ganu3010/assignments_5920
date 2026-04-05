@@ -137,7 +137,6 @@ def train_model(patience=10):
     transform = transforms.Compose([
         transforms.Resize((160, 320)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
     train_loader = make_loader(train_df, transform, batch_size=512, shuffle=True)
@@ -196,7 +195,6 @@ def test_model(weights_path=MODEL_PATH, test_csv="Testing/01/processed_robot_log
     transform = transforms.Compose([
         transforms.Resize((160, 320)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
     test_loader = make_loader(df, transform, batch_size=512, shuffle=False)
