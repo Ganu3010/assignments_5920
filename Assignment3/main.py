@@ -11,14 +11,15 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-MODEL_PATH = 'CommaAiModel.pth'
+MODEL_PATH = 'Models/CommaAiModel.pth'
+
 # --- 1. Dataset ---
 class RoverDataset(Dataset):
     def __init__(self, dataframe, transform=None):
         self.transform = transform
-        self.labels = dataframe[['SteerAngle', 'Throttle']].values.astype('float32')
+        self.labels  = dataframe[['SteerAngle', 'Throttle']].values.astype('float32')
+        self.scalars = dataframe[['Speed', 'Yaw']].values.astype('float32')
 
-        # Resolve paths once upfront, not on every __getitem__ call
         self.img_paths = []
         for path in dataframe['Path']:
             name = os.path.basename(path)
@@ -29,10 +30,11 @@ class RoverDataset(Dataset):
 
     def __getitem__(self, idx):
         image = Image.open(self.img_paths[idx]).convert('RGB')
-        labels = torch.tensor(self.labels[idx], dtype=torch.float32)
         if self.transform:
             image = self.transform(image)
-        return image, labels
+        labels  = torch.tensor(self.labels[idx],  dtype=torch.float32)
+        scalars = torch.tensor(self.scalars[idx], dtype=torch.float32)
+        return image, scalars, labels
 
 
 # --- 2. Models ---
@@ -55,7 +57,7 @@ class PilotNet(nn.Module):
         self.drop3 = nn.Dropout(p=dropout_p)
         self.control_out = nn.Linear(10, 2)
 
-    def forward(self, x):
+    def forward(self, x, scalars=None):
         x = self.norm(x)
         x = F.elu(self.conv1(x))
         x = F.elu(self.conv2(x))
@@ -70,30 +72,36 @@ class PilotNet(nn.Module):
 
 
 class CommaAiModel(nn.Module):
-    def __init__(self):
+    def __init__(self, num_scalars=2):
         super(CommaAiModel, self).__init__()
 
         self.norm = nn.BatchNorm2d(3)
 
-        # 3x3 conv layers with stride 2 — after 3 layers on (160,320): -> (20,40)
+        # Conv backbone — (160,320) -> (20,40) after 3 stride-2 layers
         self.conv1 = nn.Conv2d(3,  16, kernel_size=3, stride=2, padding=1)
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=2, padding=1)
         self.conv3 = nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1)
-
         self.flatten = nn.Flatten()
 
-        # 64 * 20 * 40 = 51200
-        self.fc1     = nn.Linear(51200, 512)
+        # Scalar branch (Speed + Yaw)
+        self.scalar_fc = nn.Linear(num_scalars, 16)
+
+        # Fusion: 51200 (image) + 16 (scalars)
+        self.fc1     = nn.Linear(51200 + 16, 512)
         self.dropout = nn.Dropout(0.5)
         self.fc2     = nn.Linear(512, 128)
         self.output  = nn.Linear(128, 2)
 
-    def forward(self, x):
+    def forward(self, x, scalars):
         x = self.norm(x)
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
         x = self.flatten(x)
+
+        s = F.relu(self.scalar_fc(scalars))
+
+        x = torch.cat([x, s], dim=1)
         x = F.relu(self.fc1(x))
         x = self.dropout(x)
         x = F.relu(self.fc2(x))
@@ -119,11 +127,12 @@ def evaluate(model, loader, criterion):
     model.eval()
     total_loss = 0.0
     with torch.no_grad():
-        for images, labels in loader:
-            images = images.to(device, non_blocking=True)
-            labels = labels.to(device, non_blocking=True)
+        for images, scalars, labels in loader:
+            images  = images.to(device, non_blocking=True)
+            scalars = scalars.to(device, non_blocking=True)
+            labels  = labels.to(device, non_blocking=True)
             with torch.amp.autocast(device_type=device.type, enabled=device.type == 'cuda'):
-                loss = criterion(model(images), labels)
+                loss = criterion(model(images, scalars), labels)
             total_loss += loss.item()
     model.train()
     return total_loss / len(loader)
@@ -142,14 +151,15 @@ def train_model(patience=10):
     train_loader = make_loader(train_df, transform, batch_size=512, shuffle=True)
     val_loader   = make_loader(val_df,   transform, batch_size=512, shuffle=False)
 
-    model     = CommaAiModel().to(device)
-    optimizer = optim.Adam(model.parameters(), lr=3e-4)
+    model     = CommaAiModel(num_scalars=2).to(device)
+    optimizer = optim.Adam(model.parameters(), lr=3e-3)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100, eta_min=3e-5)
     criterion = nn.MSELoss()
     scaler    = torch.amp.GradScaler(enabled=device.type == 'cuda')
 
-    best_val_loss    = float('inf')
+    best_val_loss     = float('inf')
     epochs_no_improve = 0
-    epochs           = 100
+    epochs            = 100
 
     print(f"Starting training on {device} (patience={patience})...")
 
@@ -157,22 +167,25 @@ def train_model(patience=10):
         model.train()
         running_loss = 0.0
 
-        for images, labels in train_loader:
-            images = images.to(device, non_blocking=True)
-            labels = labels.to(device, non_blocking=True)
+        for images, scalars, labels in train_loader:
+            images  = images.to(device, non_blocking=True)
+            scalars = scalars.to(device, non_blocking=True)
+            labels  = labels.to(device, non_blocking=True)
 
             optimizer.zero_grad(set_to_none=True)
             with torch.amp.autocast(device_type=device.type, enabled=device.type == 'cuda'):
-                loss = criterion(model(images), labels)
+                loss = criterion(model(images, scalars), labels)
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
             running_loss += loss.item()
 
+        scheduler.step()
         train_loss = running_loss / len(train_loader)
         val_loss   = evaluate(model, val_loader, criterion)
+        current_lr = scheduler.get_last_lr()[0]
 
-        print(f"Epoch {epoch+1}/{epochs} | Train: {train_loss:.4f} | Val: {val_loss:.4f} | No improve: {epochs_no_improve}/{patience}")
+        print(f"Epoch {epoch+1}/{epochs} | Train: {train_loss:.4f} | Val: {val_loss:.4f} | LR: {current_lr:.2e} | No improve: {epochs_no_improve}/{patience}")
 
         if val_loss < best_val_loss:
             best_val_loss     = val_loss
@@ -199,7 +212,7 @@ def test_model(weights_path=MODEL_PATH, test_csv="Testing/01/processed_robot_log
 
     test_loader = make_loader(df, transform, batch_size=512, shuffle=False)
 
-    model = CommaAiModel().to(device)
+    model = CommaAiModel(num_scalars=2).to(device)
     model.load_state_dict(torch.load(weights_path, map_location=device))
 
     criterion = nn.MSELoss()
