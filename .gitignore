@@ -1,3 +1,7 @@
 Assignment1/data/
 Assignment2/images/
 Assignment2/pcds/
+Assignment3/Training/
+Assignment3/Testing/
+Assignment3/Models/
+*.pth
