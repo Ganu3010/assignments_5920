@@ -10,6 +10,9 @@ for file in csv_file:
         return '\\'.join(path)
     df['Path'] = df['Path'].apply(convert_path)
     print(df['Path'][0])
+    df = df[pd.to_numeric(df['SteerAngle'], errors='coerce').notna()]
+    df['SteerAngle'] = df['SteerAngle'].astype(float)
+
     df.to_csv(file.replace('robot_log.csv', 'processed_robot_log.csv'), index=False)
 
 df = pd.read_csv("Training/robot_log.csv", sep=';')

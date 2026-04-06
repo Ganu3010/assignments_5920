@@ -11,31 +11,53 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-MODEL_PATH = 'Models/CommaAiModel.pth'
+MODEL_PATH = 'Models/CommaAiModel_lr3e-4_50.pth'
 
 # --- 1. Dataset ---
 class RoverDataset(Dataset):
     def __init__(self, dataframe, transform=None):
         self.transform = transform
-        self.labels  = dataframe[['SteerAngle', 'Throttle']].values.astype('float32')
-        self.scalars = dataframe[['Speed', 'Yaw']].values.astype('float32')
+        
+        valid_img_paths = []
+        valid_indices = []
 
-        self.img_paths = []
-        for path in dataframe['Path']:
+        print("Checking for missing images...")
+        # Iterate through the dataframe to find which files actually exist
+        for idx, row in dataframe.iterrows():
+            path = row['Path']
             name = os.path.basename(path)
-            self.img_paths.append(name if os.path.exists(name) else path)
+            
+            # Check local directory first, then fallback to the full path
+            actual_path = name if os.path.exists(name) else path
+            
+            if os.path.exists(actual_path):
+                valid_img_paths.append(actual_path)
+                valid_indices.append(idx)
+        
+        # Filter the dataframe to keep only rows where images were found
+        filtered_df = dataframe.loc[valid_indices]
+        
+        self.img_paths = valid_img_paths
+        self.labels  = filtered_df[['SteerAngle', 'Throttle']].values.astype('float32')
+        self.scalars = filtered_df[['Speed', 'Yaw']].values.astype('float32')
+
+        skipped = len(dataframe) - len(valid_indices)
+        print(f"Done! Found {len(valid_indices)} images. Skipped {skipped} missing files.")
 
     def __len__(self):
-        return len(self.labels)
+        # This now returns the number of found images, not the original DF length
+        return len(self.img_paths)
 
     def __getitem__(self, idx):
+        # This will only be called for indices that exist
         image = Image.open(self.img_paths[idx]).convert('RGB')
+        
         if self.transform:
             image = self.transform(image)
+            
         labels  = torch.tensor(self.labels[idx],  dtype=torch.float32)
         scalars = torch.tensor(self.scalars[idx], dtype=torch.float32)
         return image, scalars, labels
-
 
 # --- 2. Models ---
 
@@ -139,8 +161,8 @@ def evaluate(model, loader, criterion):
 
 
 # --- 5. Training Loop ---
-def train_model(patience=10):
-    df = pd.read_csv("Training/processed_robot_log.csv")
+def train_model(patience=20):
+    df = pd.read_csv("Training/processed_robot_log.csv").sample(frac=0.5, random_state=42).reset_index(drop=True)
     train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
 
     transform = transforms.Compose([
@@ -152,8 +174,8 @@ def train_model(patience=10):
     val_loader   = make_loader(val_df,   transform, batch_size=512, shuffle=False)
 
     model     = CommaAiModel(num_scalars=2).to(device)
-    optimizer = optim.Adam(model.parameters(), lr=3e-3)
-    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100, eta_min=3e-5)
+    optimizer = optim.Adam(model.parameters(), lr=3e-4)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100, eta_min=3e-6)
     criterion = nn.MSELoss()
     scaler    = torch.amp.GradScaler(enabled=device.type == 'cuda')
 
@@ -163,7 +185,7 @@ def train_model(patience=10):
 
     print(f"Starting training on {device} (patience={patience})...")
 
-    for epoch in tqdm(range(epochs)):
+    for epoch in tqdm(range(epochs), ncols=0):
         model.train()
         running_loss = 0.0
 
@@ -226,5 +248,5 @@ def test_model(weights_path=MODEL_PATH, test_csv="Testing/01/processed_robot_log
 if __name__ == "__main__":
     train_model()
     for i in ['01', '08', '14', '21', '26', '43']:
-        print(f"\n--- Testing on file {i} ---")
+        print(f"\n--- Evaluating on Testing/{i}/processed_robot_log.csv ---")
         test_model(test_csv=f"Testing/{i}/processed_robot_log.csv")

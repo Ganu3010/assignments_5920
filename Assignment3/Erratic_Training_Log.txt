@@ -1,0 +1,120 @@
+Checking for missing images...
+Done! Found 16000 images. Skipped 0 missing files.
+Checking for missing images...
+Done! Found 4000 images. Skipped 0 missing files.
+Starting training on cuda (patience=20)...
+  0% 0/100 [00:00<?, ?it/s]Epoch 1/100 | Train: 28.9074 | Val: 28.2124 | LR: 3.00e-04 | No improve: 0/20
+  -> New best saved (val_loss=28.2124)
+  1% 1/100 [01:09<1:54:27, 69.36s/it]Epoch 2/100 | Train: 27.0882 | Val: 27.0370 | LR: 3.00e-04 | No improve: 0/20
+  -> New best saved (val_loss=27.0370)
+  2% 2/100 [02:43<2:17:11, 84.00s/it]Epoch 3/100 | Train: 25.9505 | Val: 26.2092 | LR: 2.99e-04 | No improve: 0/20
+  -> New best saved (val_loss=26.2092)
+  3% 3/100 [03:38<1:54:26, 70.79s/it]Epoch 4/100 | Train: 24.8682 | Val: 25.4549 | LR: 2.99e-04 | No improve: 0/20
+  -> New best saved (val_loss=25.4549)
+  4% 4/100 [03:53<1:17:40, 48.55s/it]Epoch 5/100 | Train: 24.0445 | Val: 24.5872 | LR: 2.98e-04 | No improve: 0/20
+  -> New best saved (val_loss=24.5872)
+  5% 5/100 [04:07<57:22, 36.24s/it]  Epoch 6/100 | Train: 23.1856 | Val: 23.8347 | LR: 2.97e-04 | No improve: 0/20
+  -> New best saved (val_loss=23.8347)
+  6% 6/100 [04:22<45:22, 28.96s/it]Epoch 7/100 | Train: 22.7144 | Val: 23.4113 | LR: 2.96e-04 | No improve: 0/20
+  -> New best saved (val_loss=23.4113)
+  7% 7/100 [04:36<37:37, 24.27s/it]Epoch 8/100 | Train: 21.1169 | Val: 22.1999 | LR: 2.95e-04 | No improve: 0/20
+  -> New best saved (val_loss=22.1999)
+  8% 8/100 [04:51<32:12, 21.00s/it]Epoch 9/100 | Train: 20.1782 | Val: 21.8129 | LR: 2.94e-04 | No improve: 0/20
+  -> New best saved (val_loss=21.8129)
+  9% 9/100 [05:05<28:45, 18.96s/it]Epoch 10/100 | Train: 19.1633 | Val: 21.2078 | LR: 2.93e-04 | No improve: 0/20
+  -> New best saved (val_loss=21.2078)
+ 10% 10/100 [05:20<26:30, 17.67s/it]Epoch 11/100 | Train: 18.1003 | Val: 20.5654 | LR: 2.91e-04 | No improve: 0/20
+  -> New best saved (val_loss=20.5654)
+ 11% 11/100 [05:35<25:16, 17.04s/it]Epoch 12/100 | Train: 16.9311 | Val: 21.7154 | LR: 2.90e-04 | No improve: 0/20
+ 12% 12/100 [05:52<24:50, 16.93s/it]Epoch 13/100 | Train: 15.8542 | Val: 20.2001 | LR: 2.88e-04 | No improve: 1/20
+  -> New best saved (val_loss=20.2001)
+ 13% 13/100 [06:08<24:17, 16.76s/it]Epoch 14/100 | Train: 14.7178 | Val: 19.8389 | LR: 2.86e-04 | No improve: 0/20
+  -> New best saved (val_loss=19.8389)
+ 14% 14/100 [06:25<23:50, 16.64s/it]Epoch 15/100 | Train: 13.6758 | Val: 19.4447 | LR: 2.84e-04 | No improve: 0/20
+  -> New best saved (val_loss=19.4447)
+ 15% 15/100 [06:41<23:21, 16.49s/it]Epoch 16/100 | Train: 12.7098 | Val: 19.4344 | LR: 2.82e-04 | No improve: 0/20
+  -> New best saved (val_loss=19.4344)
+ 16% 16/100 [06:57<22:59, 16.42s/it]Epoch 17/100 | Train: 11.8524 | Val: 19.1104 | LR: 2.79e-04 | No improve: 0/20
+  -> New best saved (val_loss=19.1104)
+ 17% 17/100 [07:13<22:33, 16.31s/it]Epoch 18/100 | Train: 10.7960 | Val: 18.9677 | LR: 2.77e-04 | No improve: 0/20
+  -> New best saved (val_loss=18.9677)
+ 18% 18/100 [07:29<22:10, 16.22s/it]Epoch 19/100 | Train: 9.8856 | Val: 19.5309 | LR: 2.74e-04 | No improve: 0/20
+ 19% 19/100 [07:45<21:50, 16.18s/it]Epoch 20/100 | Train: 9.1056 | Val: 19.3380 | LR: 2.72e-04 | No improve: 1/20
+ 20% 20/100 [08:01<21:27, 16.09s/it]Epoch 21/100 | Train: 8.2586 | Val: 18.9054 | LR: 2.69e-04 | No improve: 2/20
+  -> New best saved (val_loss=18.9054)
+ 21% 21/100 [08:17<21:15, 16.15s/it]Epoch 22/100 | Train: 7.7268 | Val: 19.0539 | LR: 2.66e-04 | No improve: 0/20
+ 22% 22/100 [08:34<21:00, 16.17s/it]Epoch 23/100 | Train: 7.1305 | Val: 19.0829 | LR: 2.63e-04 | No improve: 1/20
+ 23% 23/100 [08:50<20:39, 16.10s/it]Epoch 24/100 | Train: 6.6604 | Val: 18.8807 | LR: 2.60e-04 | No improve: 2/20
+  -> New best saved (val_loss=18.8807)
+ 24% 24/100 [09:06<20:29, 16.17s/it]Epoch 25/100 | Train: 6.4799 | Val: 19.0587 | LR: 2.57e-04 | No improve: 0/20
+ 25% 25/100 [09:22<20:13, 16.19s/it]Epoch 26/100 | Train: 5.7864 | Val: 18.8662 | LR: 2.53e-04 | No improve: 1/20
+  -> New best saved (val_loss=18.8662)
+ 26% 26/100 [09:39<20:06, 16.31s/it]Epoch 27/100 | Train: 5.4998 | Val: 18.8592 | LR: 2.50e-04 | No improve: 0/20
+  -> New best saved (val_loss=18.8592)
+ 27% 27/100 [09:55<19:52, 16.33s/it]Epoch 28/100 | Train: 5.2175 | Val: 18.9351 | LR: 2.46e-04 | No improve: 0/20
+ 28% 28/100 [10:11<19:29, 16.25s/it]Epoch 29/100 | Train: 5.0289 | Val: 19.0675 | LR: 2.43e-04 | No improve: 1/20
+ 29% 29/100 [10:27<19:09, 16.19s/it]Epoch 30/100 | Train: 4.7612 | Val: 18.6091 | LR: 2.39e-04 | No improve: 2/20
+  -> New best saved (val_loss=18.6091)
+ 30% 30/100 [10:43<18:53, 16.19s/it]Epoch 31/100 | Train: 4.4372 | Val: 18.7344 | LR: 2.35e-04 | No improve: 0/20
+ 31% 31/100 [11:01<18:56, 16.47s/it]Epoch 32/100 | Train: 4.1128 | Val: 18.5922 | LR: 2.31e-04 | No improve: 1/20
+  -> New best saved (val_loss=18.5922)
+ 32% 32/100 [11:17<18:37, 16.43s/it]Epoch 33/100 | Train: 4.1200 | Val: 18.6912 | LR: 2.27e-04 | No improve: 0/20
+ 33% 33/100 [11:33<18:18, 16.40s/it]Epoch 34/100 | Train: 3.9601 | Val: 18.5577 | LR: 2.23e-04 | No improve: 1/20
+  -> New best saved (val_loss=18.5577)
+ 34% 34/100 [11:50<18:02, 16.40s/it]Epoch 35/100 | Train: 3.7611 | Val: 18.6229 | LR: 2.19e-04 | No improve: 0/20
+ 35% 35/100 [12:06<17:42, 16.35s/it]Epoch 36/100 | Train: 3.7019 | Val: 18.5537 | LR: 2.15e-04 | No improve: 1/20
+  -> New best saved (val_loss=18.5537)
+ 36% 36/100 [12:22<17:28, 16.38s/it]Epoch 37/100 | Train: 3.5193 | Val: 18.5502 | LR: 2.10e-04 | No improve: 0/20
+  -> New best saved (val_loss=18.5502)
+ 37% 37/100 [12:39<17:12, 16.40s/it]Epoch 38/100 | Train: 3.4563 | Val: 18.4893 | LR: 2.06e-04 | No improve: 0/20
+  -> New best saved (val_loss=18.4893)
+ 38% 38/100 [12:55<16:55, 16.38s/it]Epoch 39/100 | Train: 3.4674 | Val: 18.6225 | LR: 2.02e-04 | No improve: 0/20
+ 39% 39/100 [13:11<16:36, 16.33s/it]Epoch 40/100 | Train: 3.2686 | Val: 18.5812 | LR: 1.97e-04 | No improve: 1/20
+ 40% 40/100 [13:27<16:12, 16.22s/it]Epoch 41/100 | Train: 3.1614 | Val: 18.6111 | LR: 1.93e-04 | No improve: 2/20
+ 41% 41/100 [13:43<15:56, 16.21s/it]Epoch 42/100 | Train: 3.0984 | Val: 18.8195 | LR: 1.88e-04 | No improve: 3/20
+ 42% 42/100 [14:00<15:38, 16.18s/it]Epoch 43/100 | Train: 3.0705 | Val: 18.5900 | LR: 1.84e-04 | No improve: 4/20
+ 43% 43/100 [14:16<15:24, 16.23s/it]Epoch 44/100 | Train: 2.8853 | Val: 18.7367 | LR: 1.79e-04 | No improve: 5/20
+ 44% 44/100 [14:32<15:05, 16.16s/it]Epoch 45/100 | Train: 2.8571 | Val: 18.5848 | LR: 1.75e-04 | No improve: 6/20
+ 45% 45/100 [14:48<14:47, 16.14s/it]Epoch 46/100 | Train: 2.7980 | Val: 18.4376 | LR: 1.70e-04 | No improve: 7/20
+  -> New best saved (val_loss=18.4376)
+ 46% 46/100 [15:04<14:35, 16.21s/it]Epoch 47/100 | Train: 2.7158 | Val: 18.5099 | LR: 1.65e-04 | No improve: 0/20
+ 47% 47/100 [15:21<14:23, 16.29s/it]Epoch 48/100 | Train: 2.7406 | Val: 18.6239 | LR: 1.61e-04 | No improve: 1/20
+ 48% 48/100 [15:37<14:11, 16.38s/it]Epoch 49/100 | Train: 2.7019 | Val: 18.6044 | LR: 1.56e-04 | No improve: 2/20
+ 49% 49/100 [15:54<14:00, 16.49s/it]Epoch 50/100 | Train: 2.5977 | Val: 18.5525 | LR: 1.52e-04 | No improve: 3/20
+ 50% 50/100 [16:11<13:45, 16.50s/it]Epoch 51/100 | Train: 2.5456 | Val: 18.5753 | LR: 1.47e-04 | No improve: 4/20
+ 51% 51/100 [16:27<13:28, 16.50s/it]Epoch 52/100 | Train: 2.4718 | Val: 18.5084 | LR: 1.42e-04 | No improve: 5/20
+ 52% 52/100 [16:44<13:12, 16.52s/it]Epoch 53/100 | Train: 2.4099 | Val: 18.5977 | LR: 1.38e-04 | No improve: 6/20
+ 53% 53/100 [17:00<12:55, 16.49s/it]Epoch 54/100 | Train: 2.3293 | Val: 18.5252 | LR: 1.33e-04 | No improve: 7/20
+ 54% 54/100 [17:17<12:40, 16.54s/it]Epoch 55/100 | Train: 2.3775 | Val: 18.5718 | LR: 1.28e-04 | No improve: 8/20
+ 55% 55/100 [17:33<12:20, 16.46s/it]Epoch 56/100 | Train: 2.3397 | Val: 18.5958 | LR: 1.24e-04 | No improve: 9/20
+ 56% 56/100 [17:49<11:59, 16.35s/it]Epoch 57/100 | Train: 2.2907 | Val: 18.5556 | LR: 1.19e-04 | No improve: 10/20
+ 57% 57/100 [18:05<11:39, 16.26s/it]Epoch 58/100 | Train: 2.2462 | Val: 18.4367 | LR: 1.15e-04 | No improve: 11/20
+  -> New best saved (val_loss=18.4367)
+ 58% 58/100 [18:22<11:25, 16.33s/it]Epoch 59/100 | Train: 2.2318 | Val: 18.5891 | LR: 1.10e-04 | No improve: 0/20
+ 59% 59/100 [18:38<11:08, 16.31s/it]Epoch 60/100 | Train: 2.2744 | Val: 18.4694 | LR: 1.06e-04 | No improve: 1/20
+ 60% 60/100 [18:54<10:49, 16.24s/it]Epoch 61/100 | Train: 2.1588 | Val: 18.6181 | LR: 1.01e-04 | No improve: 2/20
+ 61% 61/100 [19:10<10:33, 16.24s/it]Epoch 62/100 | Train: 2.0365 | Val: 18.5970 | LR: 9.68e-05 | No improve: 3/20
+ 62% 62/100 [19:26<10:11, 16.09s/it]Epoch 63/100 | Train: 2.1793 | Val: 18.6669 | LR: 9.25e-05 | No improve: 4/20
+ 63% 63/100 [19:42<09:54, 16.06s/it]Epoch 64/100 | Train: 2.0630 | Val: 18.4423 | LR: 8.83e-05 | No improve: 5/20
+ 64% 64/100 [19:58<09:37, 16.03s/it]Epoch 65/100 | Train: 2.0427 | Val: 18.4729 | LR: 8.41e-05 | No improve: 6/20
+ 65% 65/100 [20:14<09:21, 16.05s/it]Epoch 66/100 | Train: 2.0258 | Val: 18.5240 | LR: 8.00e-05 | No improve: 7/20
+ 66% 66/100 [20:30<09:04, 16.01s/it]Epoch 67/100 | Train: 2.0446 | Val: 18.5607 | LR: 7.59e-05 | No improve: 8/20
+ 67% 67/100 [20:46<08:48, 16.00s/it]Epoch 68/100 | Train: 2.0431 | Val: 18.5429 | LR: 7.19e-05 | No improve: 9/20
+ 68% 68/100 [21:02<08:32, 16.03s/it]Epoch 69/100 | Train: 2.0755 | Val: 18.5865 | LR: 6.80e-05 | No improve: 10/20
+ 69% 69/100 [21:18<08:16, 16.01s/it]Epoch 70/100 | Train: 1.9975 | Val: 18.5178 | LR: 6.42e-05 | No improve: 11/20
+ 70% 70/100 [21:34<08:00, 16.02s/it]Epoch 71/100 | Train: 1.9452 | Val: 18.5884 | LR: 6.05e-05 | No improve: 12/20
+ 71% 71/100 [21:50<07:42, 15.95s/it]Epoch 72/100 | Train: 1.9518 | Val: 18.6496 | LR: 5.68e-05 | No improve: 13/20
+ 72% 72/100 [22:06<07:24, 15.88s/it]Epoch 73/100 | Train: 2.0300 | Val: 18.5785 | LR: 5.33e-05 | No improve: 14/20
+ 73% 73/100 [22:21<07:07, 15.83s/it]Epoch 74/100 | Train: 1.8547 | Val: 18.5589 | LR: 4.98e-05 | No improve: 15/20
+ 74% 74/100 [22:37<06:50, 15.80s/it]Epoch 75/100 | Train: 1.8872 | Val: 18.5482 | LR: 4.65e-05 | No improve: 16/20
+ 75% 75/100 [22:53<06:33, 15.73s/it]Epoch 76/100 | Train: 1.8383 | Val: 18.5632 | LR: 4.32e-05 | No improve: 17/20
+ 76% 76/100 [23:08<06:17, 15.74s/it]Epoch 77/100 | Train: 1.8887 | Val: 18.5407 | LR: 4.01e-05 | No improve: 18/20
+ 77% 77/100 [26:33<27:41, 72.24s/it]Epoch 78/100 | Train: 1.8699 | Val: 18.5612 | LR: 3.71e-05 | No improve: 19/20
+
+  Early stopping at epoch 78.
+ 77% 77/100 [26:51<08:01, 20.93s/it]
+Checking for missing images...
+Done! Found 12322 images. Skipped 0 missing files.
+
+Test Loss (MSE): 24.1132
+Test RMSE:       4.9105
