@@ -6,3 +6,8 @@ Assignment3/Testing/
 Assignment3/Models/
 *.pth
 Assignment3/Erratic_Data/
+Assignment4/taskA/good_model.zip
+Assignment4/taskA/models/
+Assignment4/taskA/runs/
+Assignment4/taskA/wandb/
+Assignment4/taskA/ppo_lunar_lander.zip
