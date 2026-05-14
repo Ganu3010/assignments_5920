@@ -102,10 +102,10 @@ print("Training complete.")
 
 model.save("dqn_cartpole")
 wandb.save("dqn_cartpole.zip")  # Upload final model artifact
-
+model = DQN.load("good_model_dqn.zip")
 # --- Visual evaluation ---
 eval_env = gym.make("CartPole-v1", render_mode="human")
-mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=cfg.n_eval_episodes)
+mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=config['n_eval_episodes'])
 print(f"Mean reward: {mean_reward:.2f} +/- {std_reward:.2f}")
 
 obs, info = eval_env.reset()
@@ -117,6 +117,6 @@ for _ in range(1000):
         obs, info = eval_env.reset()
 
 eval_env.close()
-eval_env_cb.close()
-env.close()
-run.finish()
+# eval_env_cb.close()
+# env.close()
+# run.finish()
