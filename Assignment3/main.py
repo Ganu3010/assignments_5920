@@ -1,3 +1,5 @@
+from matplotlib.pyplot import plot
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -11,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-MODEL_PATH = 'Models/CommaAiModel_lr3e-4_50.pth'
+MODEL_PATH = 'Models/CommaAiModel_lr3e-4.pth'
 
 # --- 1. Dataset ---
 class RoverDataset(Dataset):
@@ -162,11 +164,11 @@ def evaluate(model, loader, criterion):
 
 # --- 5. Training Loop ---
 def train_model(patience=20):
-    df = pd.read_csv("Training/processed_robot_log.csv").sample(frac=0.5, random_state=42).reset_index(drop=True)
+    df = pd.read_csv("Training/processed_robot_log.csv").sample(frac=0.25)
     train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
 
     transform = transforms.Compose([
-        transforms.Resize((160, 320)),
+        # transforms.Resize((160, 320)),
         transforms.ToTensor(),
     ])
 
@@ -244,9 +246,55 @@ def test_model(weights_path=MODEL_PATH, test_csv="Testing/01/processed_robot_log
     print(f"Test RMSE:       {test_loss**0.5:.4f}")
     return test_loss
 
+def plot_outputs(model, loader):
+    import cv2 as cv
+    import numpy as np
+
+    model.to(device)
+    model.eval()
+
+    with torch.no_grad():
+        for images, scalars, labels in loader:
+            images  = images.to(device)
+            scalars = scalars.to(device)
+
+            outputs = model(images, scalars).cpu().numpy()
+            labels  = labels.cpu().numpy()
+            images  = images.cpu()
+
+            for i in range(min(1000, len(outputs))):
+                # (3, H, W) float [0,1]  ->  (H, W, 3) uint8 [0,255]  ->  BGR for OpenCV
+                img = images[i].permute(1, 2, 0).numpy()
+                img = (img * 255).clip(0, 255).astype('uint8')
+                img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
+                img = img.copy()  # Make contiguous for cv.putText
+
+                pred_steer, pred_throttle = outputs[i]
+                true_steer, true_throttle = labels[i]
+
+                cv.putText(img, f"Pred: steer={pred_steer:.2f}  throttle={pred_throttle:.2f}",
+                           (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.3, (0, 255, 0), 1)
+                cv.putText(img, f"True: steer={true_steer:.2f}  throttle={true_throttle:.2f}",
+                           (10, 60), cv.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 255), 1)
+
+                cv.imwrite(f"outputs/Sample_{i+1}.jpg", img)
+
+    cv.destroyAllWindows()
 
 if __name__ == "__main__":
-    train_model()
-    for i in ['01', '08', '14', '21', '26', '43']:
-        print(f"\n--- Evaluating on Testing/{i}/processed_robot_log.csv ---")
-        test_model(test_csv=f"Testing/{i}/processed_robot_log.csv")
+    model = CommaAiModel(num_scalars=2).to(device)
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+    df = pd.read_csv("Testing/01/processed_robot_log.csv")
+    transform = transforms.Compose([
+        transforms.Resize((160, 320)),
+        transforms.ToTensor(),
+    ])
+    loader = make_loader(df, transform, batch_size=512, shuffle=False)
+    plot_outputs(model, loader)
+
+
+# if __name__ == "__main__":
+#     train_model()
+#     for i in ['01', '08', '14', '21', '26', '43']:
+#         print(f"\n--- Evaluating on Testing/{i}/processed_robot_log.csv ---")
+#         test_model(test_csv=f"Testing/{i}/processed_robot_log.csv")
